@@ -149,24 +149,20 @@ export default function DashboardPage() {
               <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Here&apos;s what&apos;s happening with your money today.</p>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button 
                 onClick={() => setIsExportModalOpen(true)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
                 <Download className="h-4 w-4" />
                 <span className="sm:inline">Export</span>
-              </motion.button>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+              <button 
                 onClick={() => setIsModalOpen(true)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
               >
                 <Plus className="h-4 w-4" />
                 <span className="sm:inline">Add Transaction</span>
-              </motion.button>
+              </button>
             </div>
           </div>
           
@@ -195,47 +191,39 @@ export default function DashboardPage() {
           />
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }}>
-              <StatsCard 
-                title="Total Balance"
-                value={formatCurrency(totalBalance)}
-                change={12.5}
-                icon={Wallet}
-                trend="up"
-                color="emerald"
-              />
-            </motion.div>
-            <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }}>
-              <StatsCard 
-                title="Monthly Income"
-                value={formatCurrency(monthlyIncome)}
-                change={8.2}
-                icon={ArrowUpRight}
-                trend="up"
-                color="blue"
-              />
-            </motion.div>
-            <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }}>
-              <StatsCard 
-                title="Monthly Expenses"
-                value={formatCurrency(monthlyExpenses)}
-                change={-4.3}
-                icon={ArrowDownLeft}
-                trend="down"
-                color="rose"
-              />
-            </motion.div>
-            <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }}>
-              <StatsCard 
-                title="Savings Rate"
-                value={`${savingsRate.toFixed(1)}%`}
-                change={2.1}
-                icon={CreditCard}
-                trend="up"
-                color="amber"
-              />
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatsCard 
+              title="Total Balance"
+              value={formatCurrency(totalBalance)}
+              change={12.5}
+              icon={Wallet}
+              trend="up"
+              color="emerald"
+            />
+            <StatsCard 
+              title="Monthly Income"
+              value={formatCurrency(monthlyIncome)}
+              change={8.2}
+              icon={ArrowUpRight}
+              trend="up"
+              color="blue"
+            />
+            <StatsCard 
+              title="Monthly Expenses"
+              value={formatCurrency(monthlyExpenses)}
+              change={-4.3}
+              icon={ArrowDownLeft}
+              trend="down"
+              color="rose"
+            />
+            <StatsCard 
+              title="Savings Rate"
+              value={`${savingsRate.toFixed(1)}%`}
+              change={2.1}
+              icon={CreditCard}
+              trend="up"
+              color="amber"
+            />
           </div>
 
           {/* Main Content Grid */}
@@ -265,7 +253,7 @@ export default function DashboardPage() {
                     <h2 className="text-lg sm:text-xl font-bold">By Category</h2>
                   </div>
                   <div className="h-[250px] sm:h-[300px]">
-                    <CategorySpendingChart categories={categories} />
+                    <CategorySpendingChart categories={categories} transactions={transactions} />
                   </div>
                 </div>
 
@@ -302,11 +290,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card Section */}
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="p-5 sm:p-8 rounded-3xl bg-zinc-900 dark:bg-emerald-950/20 border border-zinc-800 dark:border-emerald-900/30 text-white relative overflow-hidden group cursor-pointer"
-              >
+              <div className="p-5 sm:p-8 rounded-3xl bg-zinc-900 dark:bg-emerald-950/20 border border-zinc-800 dark:border-emerald-900/30 text-white relative overflow-hidden group">
                 <div className="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-all duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-6 sm:mb-10">
@@ -327,30 +311,22 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Quick Actions */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group"
-                >
+                <button className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group">
                   <div className="p-2.5 sm:p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                     <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Transfer</span>
-                </motion.button>
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group"
-                >
+                </button>
+                <button className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group">
                   <div className="p-2.5 sm:p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Reports</span>
-                </motion.button>
+                </button>
               </div>
             </div>
           </div>

@@ -8,14 +8,17 @@ import { CategorySpendingChart } from '@/components/category-spending-chart';
 import { PieChart, TrendingUp, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 import { Category, Transaction } from '@/lib/types';
+import { motion } from 'motion/react';
 
 export default function AnalyticsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    setMounted(true);
     const fetchData = async () => {
       try {
         const [catsRes, txsRes] = await Promise.all([
@@ -64,10 +67,10 @@ export default function AnalyticsPage() {
       <main className="flex-1 flex flex-col">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         
-        <div className="p-8 space-y-8">
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-1">Deep dive into your spending habits and trends.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Analytics</h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Deep dive into your spending habits and trends.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -85,15 +88,14 @@ export default function AnalyticsPage() {
                   </div>
                 </div>
               </div>
-              <SpendingChart />
+              <SpendingChart transactions={transactions} />
             </div>
-
             <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
               <div className="flex items-center gap-2 mb-8">
                 <PieChart className="h-5 w-5 text-emerald-600" />
                 <h2 className="text-lg font-bold">Expense Breakdown</h2>
               </div>
-              <CategorySpendingChart categories={categories as any} />
+              <CategorySpendingChart categories={categories} transactions={transactions} />
             </div>
           </div>
 

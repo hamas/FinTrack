@@ -86,26 +86,26 @@ export default function IncomePage() {
           onSearch={setSearchTerm}
         />
         
-        <div className="p-8 space-y-8">
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Income</h1>
-              <p className="text-zinc-500 dark:text-zinc-400 mt-1">Track and manage your revenue streams.</p>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Income</h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Track and manage your revenue streams.</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button 
                 onClick={() => setIsExportModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
                 <Download className="h-4 w-4" />
-                Export
+                <span className="sm:inline">Export</span>
               </button>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
               >
                 <Plus className="h-4 w-4" />
-                Add Income
+                <span className="sm:inline">Add Income</span>
               </button>
             </div>
           </div>

@@ -21,15 +21,15 @@ export default function HelpPage() {
       <main className="flex-1 flex flex-col">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         
-        <div className="p-8 space-y-8">
-          <div className="text-center max-w-2xl mx-auto space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight">How can we help?</h1>
-            <p className="text-zinc-500 dark:text-zinc-400">Search our knowledge base or contact our support team for assistance.</p>
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">How can we help?</h1>
+            <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400">Search our knowledge base or contact our support team for assistance.</p>
             <div className="relative max-w-lg mx-auto">
               <input 
                 type="text" 
                 placeholder="Search for help articles..." 
-                className="w-full px-6 py-4 bg-zinc-100 dark:bg-zinc-900 border-transparent focus:bg-white dark:focus:bg-zinc-950 border focus:border-emerald-500 rounded-2xl text-lg outline-none transition-all shadow-sm"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-zinc-100 dark:bg-zinc-900 border-transparent focus:bg-white dark:focus:bg-zinc-950 border focus:border-emerald-500 rounded-2xl text-base sm:text-lg outline-none transition-all shadow-sm"
               />
             </div>
           </div>
@@ -65,15 +65,15 @@ export default function HelpPage() {
             </div>
           </div>
 
-          <div className="p-8 rounded-3xl bg-zinc-900 text-white text-center space-y-6">
-            <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-              <HelpCircle className="h-8 w-8" />
+          <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 text-white text-center space-y-4 sm:space-y-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+              <HelpCircle className="h-6 w-6 sm:h-8 sm:w-8" />
             </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">Still need help?</h2>
-              <p className="text-zinc-400 max-w-md mx-auto">Our support team is available 24/7 to help you with any issues or questions you might have.</p>
+            <div className="space-y-1 sm:space-y-2">
+              <h2 className="text-xl sm:text-2xl font-bold">Still need help?</h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">Our support team is available 24/7 to help you with any issues or questions you might have.</p>
             </div>
-            <button className="px-8 py-3 rounded-xl bg-emerald-600 font-bold hover:bg-emerald-700 transition-colors">
+            <button className="w-full sm:w-auto px-8 py-3 rounded-xl bg-emerald-600 font-bold hover:bg-emerald-700 transition-colors text-sm sm:text-base">
               Contact Support
             </button>
           </div>

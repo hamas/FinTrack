@@ -3,13 +3,14 @@
 import * as React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useTheme } from 'next-themes';
-import { Category } from '@/lib/types';
+import { Category, Transaction } from '@/lib/types';
 
 interface CategorySpendingChartProps {
   categories: Category[];
+  transactions: Transaction[];
 }
 
-export function CategorySpendingChart({ categories }: CategorySpendingChartProps) {
+export function CategorySpendingChart({ categories, transactions }: CategorySpendingChartProps) {
   const { theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -19,14 +20,22 @@ export function CategorySpendingChart({ categories }: CategorySpendingChartProps
 
   const isDark = theme === 'dark';
 
-  // Mock data for visualization - deterministic to satisfy purity rules
   const data = React.useMemo(() => categories
     .filter(c => c.type === 'expense')
-    .map((c, index) => ({
-      name: c.name,
-      value: 100 + (index * 50), // Deterministic mock value
-      color: c.color
-    })), [categories]);
+    .map((c) => {
+      const spent = transactions
+        .filter(t => t.categoryId === c.id && t.amount < 0)
+        .reduce((acc, curr) => acc + Math.abs(curr.amount), 0);
+      
+      return {
+        name: c.name,
+        value: spent,
+        color: c.color
+      };
+    })
+    .filter(d => d.value > 0), [categories, transactions]);
+
+  if (!mounted) return <div className="h-[300px] w-full mt-4 bg-zinc-50 dark:bg-zinc-900/50 animate-pulse rounded-3xl" />;
 
   if (data.length === 0) {
     return (

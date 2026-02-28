@@ -56,13 +56,13 @@ export default function BudgetsPage() {
       <main className="flex-1 flex flex-col">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         
-        <div className="p-8 space-y-8">
-          <div className="flex items-center justify-between">
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Budgets</h1>
-              <p className="text-zinc-500 dark:text-zinc-400 mt-1">Set and track your monthly spending limits.</p>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Budgets</h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Set and track your monthly spending limits.</p>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20">
+            <button className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20 w-full sm:w-auto">
               <Plus className="h-4 w-4" />
               Create Budget
             </button>

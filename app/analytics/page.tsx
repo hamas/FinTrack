@@ -1,13 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
-import { SpendingChart } from '@/components/spending-chart';
-import { CategorySpendingChart } from '@/components/category-spending-chart';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
+import { SpendingChart } from '@/lib/presentation/components/spending-chart';
+import { CategorySpendingChart } from '@/lib/presentation/components/category-spending-chart';
 import { PieChart, TrendingUp, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
-import { Category, Transaction } from '@/lib/types';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 import { motion } from 'motion/react';
 
 export default function AnalyticsPage() {

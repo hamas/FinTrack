@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { X, Tag, Trash2, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Category } from '@/lib/types';
+import { Category } from '@/lib/domain/entities/types';
 import { ICON_MAP, ICON_NAMES } from '@/lib/icons';
 
 interface CategoryManagerProps {

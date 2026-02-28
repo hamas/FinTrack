@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { X, Download, Calendar, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Category, Transaction } from '@/lib/types';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 import { format, isWithinInterval, parseISO } from 'date-fns';
 
 interface ExportModalProps {

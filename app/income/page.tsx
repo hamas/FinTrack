@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
-import { TransactionList } from '@/components/transaction-list';
-import { AddTransactionModal } from '@/components/add-transaction-modal';
-import { ExportModal } from '@/components/export-modal';
-import { Category, Transaction } from '@/lib/types';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
+import { TransactionList } from '@/lib/presentation/components/transaction-list';
+import { AddTransactionModal } from '@/lib/presentation/components/add-transaction-modal';
+import { ExportModal } from '@/lib/presentation/components/export-modal';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 import { Download, Plus, TrendingUp, ArrowUpRight } from 'lucide-react';
 
 export default function IncomePage() {

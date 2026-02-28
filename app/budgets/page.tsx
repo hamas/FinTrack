@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
 import { motion } from 'motion/react';
 import { Plus, Settings2, TrendingUp } from 'lucide-react';
 
-import { Category, Transaction } from '@/lib/types';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 
 export default function BudgetsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);

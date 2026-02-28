@@ -5,7 +5,7 @@ import { X, Plus, DollarSign, Tag, Calendar as CalendarIcon } from 'lucide-react
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 
-import { Category, Transaction, Frequency, RecurringMetadata } from '@/lib/types';
+import { Category, Transaction, Frequency, RecurringMetadata } from '@/lib/domain/entities/types';
 
 interface AddTransactionModalProps {
   isOpen: boolean;

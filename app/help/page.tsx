@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
 import { HelpCircle, MessageSquare, Book, FileText, ExternalLink } from 'lucide-react';
 
 export default function HelpPage() {

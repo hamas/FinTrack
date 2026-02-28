@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
 import { User, Bell, Shield, CreditCard, Globe, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { transactionRepository } from '@/lib/data/repositories/transaction.repository';
 
 export async function PUT(
   request: Request,
@@ -8,20 +8,8 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, amount, date, categoryId, updateRecurring } = body;
 
-    // Update the transaction
-    const updateTx = db.prepare('UPDATE transactions SET name = ?, amount = ?, date = ?, categoryId = ? WHERE id = ?');
-    updateTx.run(name, amount, date, categoryId, id);
-
-    // If it's linked to a recurring rule and user wants to update the rule too
-    if (updateRecurring) {
-      const tx = db.prepare('SELECT recurringId FROM transactions WHERE id = ?').get() as { recurringId?: string };
-      if (tx?.recurringId) {
-        const updateRule = db.prepare('UPDATE recurring_transactions SET name = ?, amount = ?, categoryId = ? WHERE id = ?');
-        updateRule.run(name, amount, categoryId, tx.recurringId);
-      }
-    }
+    await transactionRepository.update(id, body);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -36,7 +24,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    db.prepare('DELETE FROM transactions WHERE id = ?').run(id);
+    await transactionRepository.delete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE error:', error);

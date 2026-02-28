@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { categoryRepository } from '@/lib/data/repositories/category.repository';
 
 export async function PUT(
   request: Request,
@@ -8,13 +8,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, iconName, color, type, budget } = body;
-
-    db.prepare(`
-      UPDATE categories 
-      SET name = ?, iconName = ?, color = ?, type = ?, budget = ?
-      WHERE id = ?
-    `).run(name, iconName, color, type, budget, id);
+    await categoryRepository.update(id, body);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -28,7 +22,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    db.prepare('DELETE FROM categories WHERE id = ?').run(id);
+    await categoryRepository.delete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });

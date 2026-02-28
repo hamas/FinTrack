@@ -1,22 +1,22 @@
 'use client';
 
 import * as React from 'react';
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
-import { StatsCard } from '@/components/stats-card';
-import { TransactionList } from '@/components/transaction-list';
-import { DashboardChart } from '@/components/dashboard-chart';
-import { BudgetProgress } from '@/components/budget-progress';
+import { Sidebar } from '@/lib/presentation/components/sidebar';
+import { Header } from '@/lib/presentation/components/header';
+import { StatsCard } from '@/lib/presentation/components/stats-card';
+import { TransactionList } from '@/lib/presentation/components/transaction-list';
+import { DashboardChart } from '@/lib/presentation/components/dashboard-chart';
+import { BudgetProgress } from '@/lib/presentation/components/budget-progress';
 import { formatCurrency } from '@/lib/format';
-import { AddTransactionModal } from '@/components/add-transaction-modal';
-import { CategoryManager } from '@/components/category-manager';
-import { CategorySpendingChart } from '@/components/category-spending-chart';
-import { ExportModal } from '@/components/export-modal';
-import { Category, Transaction } from '@/lib/types';
-import { 
-  Wallet, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
+import { AddTransactionModal } from '@/lib/presentation/components/add-transaction-modal';
+import { CategoryManager } from '@/lib/presentation/components/category-manager';
+import { CategorySpendingChart } from '@/lib/presentation/components/category-spending-chart';
+import { ExportModal } from '@/lib/presentation/components/export-modal';
+import { Category, Transaction } from '@/lib/domain/entities/types';
+import {
+  Wallet,
+  ArrowUpRight,
+  ArrowDownLeft,
   CreditCard,
   Plus,
   Download,
@@ -26,121 +26,36 @@ import {
   Settings2
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useDashboard } from '@/lib/presentation/hooks/use-dashboard';
 
 export default function DashboardPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isCategoryManagerOpen, setIsCategoryManagerOpen] = React.useState(false);
-  const [isExportModalOpen, setIsExportModalOpen] = React.useState(false);
-  const [editingTransaction, setEditingTransaction] = React.useState<Transaction | null>(null);
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  const filteredTransactions = React.useMemo(() => {
-    if (!searchTerm) return transactions;
-    const term = searchTerm.toLowerCase();
-    return transactions.filter(tx => 
-      tx.name.toLowerCase().includes(term) ||
-      tx.categoryName?.toLowerCase().includes(term) ||
-      tx.amount.toString().includes(term)
-    );
-  }, [transactions, searchTerm]);
-
-  const fetchData = async () => {
-    try {
-      // Process recurring transactions first
-      await fetch('/api/recurring/process', { method: 'POST' });
-
-      const [catsRes, txsRes] = await Promise.all([
-        fetch('/api/categories'),
-        fetch('/api/transactions')
-      ]);
-      const cats = await catsRes.json();
-      const txs = await txsRes.json();
-      setCategories(cats);
-      setTransactions(txs);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleAddCategory = async (newCat: Omit<Category, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    await fetch('/api/categories', {
-      method: 'POST',
-      body: JSON.stringify({ ...newCat, id })
-    });
-    fetchData();
-  };
-
-  const handleDeleteCategory = async (id: string) => {
-    await fetch(`/api/categories/${id}`, { method: 'DELETE' });
-    fetchData();
-  };
-
-  const handleUpdateCategory = async (id: string, updates: Partial<Category>) => {
-    await fetch(`/api/categories/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(updates)
-    });
-    fetchData();
-  };
-
-  const handleSaveTransaction = async (tx: any) => {
-    if (tx.id) {
-      // Edit existing
-      await fetch(`/api/transactions/${tx.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(tx)
-      });
-    } else {
-      // Add new
-      const id = Math.random().toString(36).substr(2, 9);
-      await fetch('/api/transactions', {
-        method: 'POST',
-        body: JSON.stringify({ ...tx, id })
-      });
-    }
-    fetchData();
-  };
-
-  const handleEditClick = (tx: Transaction) => {
-    setEditingTransaction(tx);
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setEditingTransaction(null);
-  };
-
-  const totalBalance = transactions.reduce((acc, curr) => acc + curr.amount, 0);
-  const monthlyIncome = transactions
-    .filter(t => t.amount > 0 && new Date(t.date).getMonth() === new Date().getMonth())
-    .reduce((acc, curr) => acc + curr.amount, 0);
-  const monthlyExpenses = Math.abs(transactions
-    .filter(t => t.amount < 0 && new Date(t.date).getMonth() === new Date().getMonth())
-    .reduce((acc, curr) => acc + curr.amount, 0));
-  const savingsRate = monthlyIncome > 0 ? ((monthlyIncome - monthlyExpenses) / monthlyIncome) * 100 : 0;
+  const { state, actions } = useDashboard();
+  const {
+    isSidebarOpen,
+    isModalOpen,
+    isCategoryManagerOpen,
+    isExportModalOpen,
+    editingTransaction,
+    searchTerm,
+    categories,
+    transactions,
+    filteredTransactions,
+    totalBalance,
+    monthlyIncome,
+    monthlyExpenses,
+    savingsRate
+  } = state;
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-zinc-950">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      
+      <Sidebar isOpen={isSidebarOpen} onClose={() => actions.setIsSidebarOpen(false)} />
+
       <main className="flex-1 flex flex-col">
-        <Header 
-          onMenuClick={() => setIsSidebarOpen(true)} 
-          onSearch={setSearchTerm}
+        <Header
+          onMenuClick={() => actions.setIsSidebarOpen(true)}
+          onSearch={actions.setSearchTerm}
         />
-        
+
         <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
           {/* Welcome Section */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -149,15 +64,15 @@ export default function DashboardPage() {
               <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Here&apos;s what&apos;s happening with your money today.</p>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <button 
-                onClick={() => setIsExportModalOpen(true)}
+              <button
+                onClick={() => actions.setIsExportModalOpen(true)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
                 <Download className="h-4 w-4" />
                 <span className="sm:inline">Export</span>
               </button>
-              <button 
-                onClick={() => setIsModalOpen(true)}
+              <button
+                onClick={() => actions.setIsModalOpen(true)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
               >
                 <Plus className="h-4 w-4" />
@@ -165,34 +80,34 @@ export default function DashboardPage() {
               </button>
             </div>
           </div>
-          
-          <AddTransactionModal 
-            isOpen={isModalOpen} 
-            onClose={handleModalClose} 
+
+          <AddTransactionModal
+            isOpen={isModalOpen}
+            onClose={actions.handleModalClose}
             categories={categories}
-            onAddTransaction={handleSaveTransaction}
+            onAddTransaction={actions.handleSaveTransaction}
             initialData={editingTransaction}
           />
 
-          <CategoryManager 
+          <CategoryManager
             isOpen={isCategoryManagerOpen}
-            onClose={() => setIsCategoryManagerOpen(false)}
+            onClose={() => actions.setIsCategoryManagerOpen(false)}
             categories={categories}
-            onAddCategory={handleAddCategory}
-            onUpdateCategory={handleUpdateCategory}
-            onDeleteCategory={handleDeleteCategory}
+            onAddCategory={actions.handleAddCategory}
+            onUpdateCategory={actions.handleUpdateCategory}
+            onDeleteCategory={actions.handleDeleteCategory}
           />
 
-          <ExportModal 
+          <ExportModal
             isOpen={isExportModalOpen}
-            onClose={() => setIsExportModalOpen(false)}
+            onClose={() => actions.setIsExportModalOpen(false)}
             transactions={transactions}
             categories={categories}
           />
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatsCard 
+            <StatsCard
               title="Total Balance"
               value={formatCurrency(totalBalance)}
               change={12.5}
@@ -200,7 +115,7 @@ export default function DashboardPage() {
               trend="up"
               color="emerald"
             />
-            <StatsCard 
+            <StatsCard
               title="Monthly Income"
               value={formatCurrency(monthlyIncome)}
               change={8.2}
@@ -208,7 +123,7 @@ export default function DashboardPage() {
               trend="up"
               color="blue"
             />
-            <StatsCard 
+            <StatsCard
               title="Monthly Expenses"
               value={formatCurrency(monthlyExpenses)}
               change={-4.3}
@@ -216,7 +131,7 @@ export default function DashboardPage() {
               trend="down"
               color="rose"
             />
-            <StatsCard 
+            <StatsCard
               title="Savings Rate"
               value={`${savingsRate.toFixed(1)}%`}
               change={2.1}
@@ -264,9 +179,9 @@ export default function DashboardPage() {
                       View all <ChevronRight className="h-4 w-4" />
                     </button>
                   </div>
-                  <TransactionList 
-                    transactions={filteredTransactions.slice(0, 5)} 
-                    onEdit={handleEditClick}
+                  <TransactionList
+                    transactions={filteredTransactions.slice(0, 5)}
+                    onEdit={actions.handleEditClick}
                     searchTerm={searchTerm}
                   />
                 </div>
@@ -279,8 +194,8 @@ export default function DashboardPage() {
               <div className="p-4 sm:p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <h2 className="text-lg sm:text-xl font-bold">Budget Status</h2>
-                  <button 
-                    onClick={() => setIsCategoryManagerOpen(true)}
+                  <button
+                    onClick={() => actions.setIsCategoryManagerOpen(true)}
                     className="p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-400 transition-colors"
                   >
                     <Settings2 className="h-5 w-5" />

@@ -13,7 +13,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { Transaction } from '@/lib/types';
+import { Transaction } from '@/lib/domain/entities/types';
 import { formatCurrency } from '@/lib/format';
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 

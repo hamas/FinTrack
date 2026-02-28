@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Category, Transaction } from '@/lib/types';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 import { formatCurrency } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { ICON_MAP } from '@/lib/icons';

@@ -11,7 +11,7 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { useTheme } from 'next-themes';
-import { Transaction } from '@/lib/types';
+import { Transaction } from '@/lib/domain/entities/types';
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 
 interface SpendingChartProps {

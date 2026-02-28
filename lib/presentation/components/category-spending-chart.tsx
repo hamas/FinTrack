@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useTheme } from 'next-themes';
-import { Category, Transaction } from '@/lib/types';
+import { Category, Transaction } from '@/lib/domain/entities/types';
 
 interface CategorySpendingChartProps {
   categories: Category[];

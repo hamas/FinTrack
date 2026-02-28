@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { categoryRepository } from '@/lib/data/repositories/category.repository';
 
 export async function GET() {
   try {
-    const categories = db.prepare('SELECT * FROM categories').all();
+    const categories = await categoryRepository.getAll();
     return NextResponse.json(categories);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 });
@@ -13,9 +13,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, name, iconName, color, type, budget } = body;
-    const insert = db.prepare('INSERT INTO categories (id, name, iconName, color, type, budget) VALUES (?, ?, ?, ?, ?, ?)');
-    insert.run(id, name, iconName, color, type, budget);
+    await categoryRepository.create(body);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create category' }, { status: 500 });

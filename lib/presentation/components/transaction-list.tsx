@@ -4,7 +4,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ICON_MAP } from '@/lib/icons';
-import { Transaction } from '@/lib/types';
+import { Transaction } from '@/lib/domain/entities/types';
 import { MoreVertical, Tag, Search, RefreshCw, Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
 

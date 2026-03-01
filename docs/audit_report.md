@@ -42,3 +42,34 @@ To reach "Staff Engineer" enterprise standards:
 
 *Refactoring Plan added to `tasks/todo.md`.*
 *Anti-patterns added to `tasks/lessons.md`.*
+
+---
+
+## 4. Typography & Scaling Standard (The "Flex" Standard)
+**Target**: Global Compact UI & Typography Overhaul
+
+### Typography Standard
+- **Primary Typeface**: `Google Sans Flex` (Variable Font)
+- **Integration Strategy**: Sourced via standard `<link>` tags pointing to Google Fonts `css2?family=Google+Sans+Flex:opsz,wght@8..144,100..1000&display=swap` to maximize high-end "Flex" rendering features.
+- **Fallbacks**: `system-ui, sans-serif` (maintaining a robust modern stack if network interruptions occur).
+- **Weight Configurations**:
+  - `Default Body`: 400 (for high legibility on density data displays)
+  - `Headlines (h2/h3)`: 600 (Semibold, tight tracking)
+  - `Hero Headers (h1)`: 700 (Bold, tight tracking)
+
+### Global Compact Scaling Protocol
+The entire application has been scaled down to maximize information density while maintaining a "Premium Minimalist" aesthetic.
+
+- **Base Root Font**: Scaled from 16px to **14px** (**0.875rem**) globally inside `app/globals.css`.
+- **Heading Hierarchy Adjustments**:
+  - `h1`: Shifted gracefully down by one step (from `text-3xl` to `text-2xl`) to avoid feeling overly "bulky".
+  - `h2`: Shifted gracefully down (from `text-xl` to `text-lg`).
+  - `h3`: Shifted gracefully down (relative scaling inside components).
+- **Proportional Spacing Reduction**:
+  - The base Tailwind spacing token `--spacing` has been reduced from the default `0.25rem` to **`0.2rem`**.
+  - This effectively reduces all margins and padding across the application by **20%**, ensuring UI components like Cards, Sidebars, Modals, and Headers are consistently tighter.
+- **Component Specific Adjustments**:
+  - **StatsCards**: Padding reduced to `p-3 lg:p-5`, aligning with the high-density financial layout.
+  - **Header**: Height clipped from `h-14` to `h-12`; padding reduced by roughly 15%.
+  - **Pages**: Top-level margins, hero padding, and section gaps have been consistently decreased.
+- **Structural Integrity**: 100% clean implementation via `@theme` variables inside Tailwind v4. No CSS hacks or fragile style overrides were introduced.

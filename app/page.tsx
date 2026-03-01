@@ -23,10 +23,15 @@ import {
   Filter,
   ChevronRight,
   PieChart as PieChartIcon,
-  Settings2
+  Settings2,
+  Activity,
+  List,
+  Server
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, Variants } from 'framer-motion';
 import { useDashboard } from '@/lib/presentation/hooks/use-dashboard';
+import { CardHeader } from '@/lib/presentation/components/card-header';
+import { CardStack } from '@/lib/presentation/components/card-stack';
 
 export default function DashboardPage() {
   const { state, actions } = useDashboard();
@@ -46,41 +51,64 @@ export default function DashboardPage() {
     savingsRate
   } = state;
 
+  // Framer Motion Variants for Staggered Load
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
+
   return (
-    <div className="flex min-h-screen bg-white dark:bg-zinc-950">
+    <div className="flex min-h-screen">
       <Sidebar isOpen={isSidebarOpen} onClose={() => actions.setIsSidebarOpen(false)} />
 
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col overflow-x-hidden">
         <Header
           onMenuClick={() => actions.setIsSidebarOpen(true)}
           onSearch={actions.setSearchTerm}
         />
 
-        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
+        <motion.div
+          className="p-4 sm:p-8 space-y-6 sm:space-y-8 max-w-7xl mx-auto w-full"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
           {/* Welcome Section */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome back, Alex!</h1>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Welcome back, Alex!</h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Here&apos;s what&apos;s happening with your money today.</p>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => actions.setIsExportModalOpen(true)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-[32px] bg-white dark:bg-[#1E1E1E] border border-zinc-200 dark:border-zinc-800/0 text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
               >
                 <Download className="h-4 w-4" />
                 <span className="sm:inline">Export</span>
               </button>
               <button
                 onClick={() => actions.setIsModalOpen(true)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-[32px] bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(0,230,118,0.2)] active:scale-[0.98]"
               >
                 <Plus className="h-4 w-4" />
                 <span className="sm:inline">Add Transaction</span>
               </button>
             </div>
-          </div>
+          </motion.div>
 
+          {/* ... Modal Components ... */}
           <AddTransactionModal
             isOpen={isModalOpen}
             onClose={actions.handleModalClose}
@@ -88,7 +116,6 @@ export default function DashboardPage() {
             onAddTransaction={actions.handleSaveTransaction}
             initialData={editingTransaction}
           />
-
           <CategoryManager
             isOpen={isCategoryManagerOpen}
             onClose={() => actions.setIsCategoryManagerOpen(false)}
@@ -97,7 +124,6 @@ export default function DashboardPage() {
             onUpdateCategory={actions.handleUpdateCategory}
             onDeleteCategory={actions.handleDeleteCategory}
           />
-
           <ExportModal
             isOpen={isExportModalOpen}
             onClose={() => actions.setIsExportModalOpen(false)}
@@ -105,147 +131,154 @@ export default function DashboardPage() {
             categories={categories}
           />
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatsCard
-              title="Total Balance"
-              value={formatCurrency(totalBalance)}
-              change={12.5}
-              icon={Wallet}
-              trend="up"
-              color="emerald"
-            />
-            <StatsCard
-              title="Monthly Income"
-              value={formatCurrency(monthlyIncome)}
-              change={8.2}
-              icon={ArrowUpRight}
-              trend="up"
-              color="blue"
-            />
-            <StatsCard
-              title="Monthly Expenses"
-              value={formatCurrency(monthlyExpenses)}
-              change={-4.3}
-              icon={ArrowDownLeft}
-              trend="down"
-              color="rose"
-            />
-            <StatsCard
-              title="Savings Rate"
-              value={`${savingsRate.toFixed(1)}%`}
-              change={2.1}
-              icon={CreditCard}
-              trend="up"
-              color="amber"
-            />
-          </div>
+          {/* Macro Hero Layout - Single Focal Anchor */}
+          <motion.div variants={itemVariants} className="theme-card relative overflow-hidden group border-0 shadow-2xl shadow-zinc-200/50 dark:shadow-none ring-1 ring-zinc-200 dark:ring-[#282828]">
+            <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-10 pointer-events-none">
+              <Wallet className="w-64 h-64 -mt-16 -mr-16 text-zinc-900 dark:text-white transform rotate-12 group-hover:rotate-6 transition-transform duration-700 ease-out" />
+            </div>
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Chart Section */}
-            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-              <div className="p-4 sm:p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-                  <div>
-                    <h2 className="text-lg sm:text-xl font-bold">Financial Performance</h2>
-                    <p className="text-xs sm:text-sm text-zinc-500">Income vs Expenses for the last 6 months</p>
-                  </div>
-                  <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 p-1 rounded-xl w-fit">
-                    <button className="px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-lg bg-white dark:bg-zinc-700 shadow-sm">Monthly</button>
-                    <button className="px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Weekly</button>
-                  </div>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 relative z-10">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-[#1E1E1E] text-xs font-bold text-zinc-600 dark:text-zinc-400">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" style={{ boxShadow: '0 0 10px rgba(0,230,118,0.5)' }}></div>
+                  Live Balance Target
                 </div>
-                <div className="h-[250px] sm:h-[300px]">
-                  <DashboardChart transactions={transactions} />
+                <div>
+                  <h2 className="text-5xl sm:text-7xl lg:text-8xl font-light tracking-tighter tabular-nums text-zinc-900 dark:text-white leading-none">
+                    {formatCurrency(totalBalance)}
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-500/20" style={{ boxShadow: '0 0 15px rgba(0,230,118,0.15)' }}>
+                    <ArrowUpRight className="h-4 w-4" />
+                    <span className="text-sm font-bold">+12.5%</span>
+                  </div>
+                  <span className="text-sm font-medium text-zinc-500 dark:text-zinc-500">vs last complete month</span>
                 </div>
               </div>
 
+              {/* Nested Modular Metrics */}
+              <div className="flex bg-zinc-50 dark:bg-[#0A0A0A] rounded-[24px] p-6 gap-8 border border-zinc-200/50 dark:border-[#282828]">
+                <div>
+                  <p className="text-xs font-bold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider mb-2">Income Flow</p>
+                  <p className="text-2xl sm:text-3xl font-light tracking-tight tabular-nums text-zinc-800 dark:text-zinc-200">
+                    {formatCurrency(monthlyIncome)}
+                  </p>
+                </div>
+                <div className="w-px bg-zinc-200 dark:bg-[#282828]" />
+                <div>
+                  <p className="text-xs font-bold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider mb-2">Total Expenses</p>
+                  <p className="text-2xl sm:text-3xl font-light tracking-tight tabular-nums text-zinc-800 dark:text-zinc-200">
+                    {formatCurrency(monthlyExpenses)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Masonry Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+
+            {/* Primary Column - Data Viz (Spans 8 cols) */}
+            <div className="lg:col-span-8 space-y-6 sm:space-y-8 flex flex-col">
+
+              <motion.div variants={itemVariants} className="theme-card flex-1 min-h-[400px]">
+                <CardHeader
+                  title="Financial Flux Orbit"
+                  subtitle="Income velocity vs Expense friction tracking over 180 days"
+                  icon={Activity}
+                  className="mb-6 sm:mb-8"
+                  action={
+                    <div className="flex items-center gap-1 bg-zinc-100 dark:bg-[#1E1E1E] p-1.5 rounded-2xl w-fit mt-4 sm:mt-0">
+                      <button className="px-4 py-2 text-xs font-bold rounded-xl bg-white dark:bg-[#282828] shadow-sm text-zinc-900 dark:text-white transition-all">Monthly</button>
+                      <button className="px-4 py-2 text-xs font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Quarterly</button>
+                    </div>
+                  }
+                />
+                <div className="h-[280px] sm:h-[350px] w-full">
+                  <DashboardChart transactions={transactions} />
+                </div>
+              </motion.div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                <div className="p-4 sm:p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                  <div className="flex items-center gap-2 mb-6 sm:mb-8">
-                    <PieChartIcon className="h-5 w-5 text-emerald-600" />
-                    <h2 className="text-lg sm:text-xl font-bold">By Category</h2>
-                  </div>
+                <motion.div variants={itemVariants} className="theme-card">
+                  <CardHeader
+                    title="Category Distribution"
+                    icon={PieChartIcon}
+                    className="mb-6 sm:mb-8"
+                  />
                   <div className="h-[250px] sm:h-[300px]">
                     <CategorySpendingChart categories={categories} transactions={transactions} />
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="p-4 sm:p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                  <div className="flex items-center justify-between mb-6 sm:mb-8">
-                    <h2 className="text-lg sm:text-xl font-bold">Recent Transactions</h2>
-                    <button className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1">
-                      View all <ChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <TransactionList
-                    transactions={filteredTransactions.slice(0, 5)}
-                    onEdit={actions.handleEditClick}
-                    searchTerm={searchTerm}
+                <motion.div variants={itemVariants} className="theme-card flex flex-col">
+                  <CardHeader
+                    title="Recent Signatures"
+                    icon={List}
+                    className="mb-6 sm:mb-8"
+                    action={
+                      <button className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-bold hover:text-emerald-700 transition-colors flex items-center gap-1 mt-4 sm:mt-0">
+                        View all <ChevronRight className="h-4 w-4" />
+                      </button>
+                    }
                   />
-                </div>
+                  <div className="flex-1">
+                    <TransactionList
+                      transactions={filteredTransactions.slice(0, 5)}
+                      onEdit={actions.handleEditClick}
+                      searchTerm={searchTerm}
+                    />
+                  </div>
+                </motion.div>
               </div>
             </div>
 
-            {/* Sidebar Content */}
-            <div className="space-y-6 sm:space-y-8">
-              {/* Budget Progress */}
-              <div className="p-4 sm:p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h2 className="text-lg sm:text-xl font-bold">Budget Status</h2>
-                  <button
-                    onClick={() => actions.setIsCategoryManagerOpen(true)}
-                    className="p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-400 transition-colors"
-                  >
-                    <Settings2 className="h-5 w-5" />
-                  </button>
-                </div>
+            {/* Secondary Column - Ancillary Tools (Spans 4 cols) */}
+            <div className="lg:col-span-4 space-y-6 sm:space-y-8 flex flex-col">
+
+              {/* Budget Hardware Progress Tracks */}
+              <motion.div variants={itemVariants} className="theme-card">
+                <CardHeader
+                  title="Hardware Allocation"
+                  icon={Server}
+                  className="mb-6 sm:mb-8"
+                  action={
+                    <button
+                      onClick={() => actions.setIsCategoryManagerOpen(true)}
+                      className="p-2.5 rounded-full bg-zinc-100 dark:bg-[#1E1E1E] hover:bg-zinc-200 dark:hover:bg-[#282828] text-zinc-500 dark:text-zinc-400 transition-colors mt-4 sm:mt-0"
+                    >
+                      <Settings2 className="h-4 w-4" />
+                    </button>
+                  }
+                />
                 <BudgetProgress categories={categories} transactions={transactions} />
-              </div>
+              </motion.div>
 
-              {/* Card Section */}
-              <div className="p-5 sm:p-8 rounded-3xl bg-zinc-900 dark:bg-emerald-950/20 border border-zinc-800 dark:border-emerald-900/30 text-white relative overflow-hidden group">
-                <div className="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-all duration-500"></div>
-                <div className="relative z-10">
-                  <div className="flex justify-between items-start mb-6 sm:mb-10">
-                    <div className="p-2 sm:p-3 bg-white/10 rounded-xl backdrop-blur-sm">
-                      <CreditCard className="h-5 w-5 sm:h-6 sm:w-6" />
-                    </div>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Visa Platinum</span>
-                  </div>
-                  <div className="space-y-0.5 sm:space-y-1">
-                    <p className="text-[9px] sm:text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Current Balance</p>
-                    <h3 className="text-2xl sm:text-3xl font-bold tabular-nums">{formatCurrency(totalBalance)}</h3>
-                  </div>
-                  <div className="mt-6 sm:mt-10 flex justify-between items-end">
-                    <p className="text-xs sm:text-sm font-mono tracking-widest text-zinc-300">**** **** **** 4582</p>
-                    <div className="flex -space-x-2">
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-rose-500/80 backdrop-blur-sm border border-white/10"></div>
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-amber-500/80 backdrop-blur-sm border border-white/10"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Interactive Layered Card Stack */}
+              <motion.div variants={itemVariants} className="w-full relative z-10">
+                <CardStack />
+              </motion.div>
 
-              {/* Quick Actions */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <button className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group">
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+              {/* Quick Action Dock */}
+              <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
+                <button className="theme-card-interactive flex flex-col items-center justify-center gap-3 !p-6">
+                  <div className="p-3.5 rounded-2xl bg-zinc-100 dark:bg-[#1E1E1E] text-zinc-700 dark:text-zinc-300 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                    <Plus className="h-5 w-5" />
                   </div>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Transfer</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 group-hover:text-emerald-600 transition-colors">Transfer</span>
                 </button>
-                <button className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2 sm:gap-3 hover:border-emerald-500 transition-all group">
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
+                <button className="theme-card-interactive flex flex-col items-center justify-center gap-3 !p-6">
+                  <div className="p-3.5 rounded-2xl bg-zinc-100 dark:bg-[#1E1E1E] text-zinc-700 dark:text-zinc-300 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Filter className="h-5 w-5" />
                   </div>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Reports</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 group-hover:text-blue-600 transition-colors">Reports</span>
                 </button>
-              </div>
+              </motion.div>
+
             </div>
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   );

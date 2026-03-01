@@ -1,12 +1,12 @@
-import { 
-  addDays, 
-  addWeeks, 
-  addMonths, 
-  addYears, 
-  isWeekend, 
-  nextDay, 
-  setDay, 
-  startOfMonth, 
+import {
+  addDays,
+  addWeeks,
+  addMonths,
+  addYears,
+  isWeekend,
+  nextDay,
+  setDay,
+  startOfMonth,
   endOfMonth,
   isAfter,
   parseISO,
@@ -15,11 +15,11 @@ import {
   setDate,
   lastDayOfMonth
 } from 'date-fns';
-import { Frequency, RecurringMetadata } from './types';
+import { Frequency, RecurringMetadata } from './domain/entities/types';
 
 export function getNextOccurrence(
-  currentDate: string | Date, 
-  frequency: Frequency, 
+  currentDate: string | Date,
+  frequency: Frequency,
   metadata?: RecurringMetadata,
   endDate?: string
 ): string | null {
@@ -82,7 +82,7 @@ export function getNextOccurrence(
   }
 
   const result = format(next, 'yyyy-MM-dd');
-  
+
   if (endDate && isAfter(next, parseISO(endDate))) {
     return null;
   }

@@ -1,14 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
   Cell,
   AreaChart,
   Area
@@ -63,7 +63,7 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
 
     transactions.forEach(tx => {
       const txDate = new Date(tx.date);
-      const monthData = last6Months.find(m => 
+      const monthData = last6Months.find(m =>
         isWithinInterval(txDate, { start: m.start, end: m.end })
       );
 
@@ -82,36 +82,51 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" opacity={0.5} />
-          <XAxis 
-            dataKey="month" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fontSize: mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 9 : 10, fontWeight: 600, fill: '#9ca3af' }} 
+        <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <defs>
+            <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis
+            dataKey="month"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 9 : 10, fontWeight: 600, fill: '#9ca3af' }}
             dy={10}
           />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fontSize: mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 9 : 10, fontWeight: 600, fill: '#9ca3af' }} 
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 9 : 10, fontWeight: 600, fill: '#9ca3af' }}
             tickFormatter={(value) => `$${value}`}
             hide={mounted && typeof window !== 'undefined' && window.innerWidth < 640}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)', radius: 8 }} />
-          <Bar 
-            dataKey="income" 
-            fill="#10b981" 
-            radius={[4, 4, 0, 0]} 
-            barSize={mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 12 : 20}
+          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, strokeDasharray: '4 4' }} />
+          <Area
+            type="monotone"
+            dataKey="income"
+            stroke="#10b981"
+            strokeWidth={3}
+            fillOpacity={1}
+            fill="url(#colorIncome)"
+            activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981' }}
           />
-          <Bar 
-            dataKey="expense" 
-            fill="#f43f5e" 
-            radius={[4, 4, 0, 0]} 
-            barSize={mounted && typeof window !== 'undefined' && window.innerWidth < 640 ? 12 : 20}
+          <Area
+            type="monotone"
+            dataKey="expense"
+            stroke="#f43f5e"
+            strokeWidth={3}
+            fillOpacity={1}
+            fill="url(#colorExpense)"
+            activeDot={{ r: 6, strokeWidth: 0, fill: '#f43f5e' }}
           />
-        </BarChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );

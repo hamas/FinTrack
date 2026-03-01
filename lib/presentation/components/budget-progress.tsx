@@ -30,7 +30,7 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
         const spent = transactions
           .filter(tx => tx.categoryId === category.id && tx.amount < 0)
           .reduce((acc, tx) => acc + Math.abs(tx.amount), 0);
-        
+
         const percentage = Math.min((spent / (category.budget || 1)) * 100, 100);
         const isOverBudget = spent > (category.budget || 0);
         const Icon = ICON_MAP[category.iconName] || Tag;
@@ -39,8 +39,7 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
           <div key={category.id} className="space-y-2 group">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105"
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-black/20"
                   style={{ backgroundColor: `${category.color}15`, color: category.color }}
                 >
                   <Icon className="h-5 w-5" />
@@ -56,7 +55,7 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
                 <p className={cn(
                   "text-xs font-bold",
                   isOverBudget ? "text-rose-500" : "text-zinc-600 dark:text-zinc-400"
-                )}>
+                )} style={!isOverBudget ? { textShadow: `0 0 10px ${category.color}40` } : {}}>
                   {Math.round(percentage)}%
                 </p>
                 <p className="text-[10px] font-medium text-zinc-400">
@@ -64,17 +63,23 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
                 </p>
               </div>
             </div>
-            <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-              <div 
+
+            {/* 12px Hardware Glass Track */}
+            <div className="h-3 w-full bg-zinc-100 dark:bg-white/5 backdrop-blur-md rounded-full overflow-hidden border border-zinc-200/50 dark:border-white/10 shadow-inner">
+              <div
                 className={cn(
-                  "h-full transition-all duration-500 ease-out rounded-full",
-                  isOverBudget ? "bg-rose-500" : "bg-emerald-500"
+                  "h-full transition-all duration-700 ease-out rounded-full relative",
+                  isOverBudget ? "bg-rose-500" : ""
                 )}
-                style={{ 
+                style={{
                   width: `${percentage}%`,
-                  backgroundColor: isOverBudget ? undefined : category.color 
+                  backgroundColor: isOverBudget ? undefined : category.color,
+                  boxShadow: isOverBudget ? '0 0 15px rgba(244, 63, 94, 0.4)' : `0 0 15px ${category.color}60`
                 }}
-              />
+              >
+                {/* Simulated LED Glint */}
+                <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-r from-transparent to-white/30 rounded-r-full"></div>
+              </div>
             </div>
           </div>
         );

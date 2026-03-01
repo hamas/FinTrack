@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { X, Plus, DollarSign, Tag, Calendar as CalendarIcon } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 import { Category, Transaction, Frequency, RecurringMetadata } from '@/lib/domain/entities/types';
@@ -25,7 +25,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
   const [endDate, setEndDate] = React.useState('');
   const [metadata, setMetadata] = React.useState<RecurringMetadata>({});
   const [updateRecurring, setUpdateRecurring] = React.useState(false);
-  
+
   const [errors, setErrors] = React.useState<{ name?: string; amount?: string; date?: string }>({});
   const [touched, setTouched] = React.useState<{ name?: boolean; amount?: boolean; date?: boolean }>({});
 
@@ -77,7 +77,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
     e.preventDefault();
     setTouched({ name: true, amount: true, date: true });
     if (!validate()) return;
-    
+
     const selectedCategory = categories.find(c => c.id === categoryId);
     const finalAmount = selectedCategory?.type === 'expense' ? -Math.abs(parseFloat(amount)) : Math.abs(parseFloat(amount));
 
@@ -93,29 +93,29 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
       metadata: isRecurring && frequency === 'custom' ? metadata : null,
       updateRecurring: initialData ? updateRecurring : undefined
     });
-    
+
     onClose();
   };
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
           className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-md bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 max-h-[90vh] overflow-y-auto"
+          className="relative w-full max-w-md theme-card !p-0 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
         >
           <div className="p-4 sm:p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between sticky top-0 bg-white dark:bg-zinc-900 z-10">
-            <h2 className="text-lg sm:text-xl font-bold">{initialData ? 'Edit Transaction' : 'Add Transaction'}</h2>
-            <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+            <h2 className="text-xl sm:text-2xl font-bold">{initialData ? 'Edit Transaction' : 'Add Transaction'}</h2>
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform active:scale-95">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -125,16 +125,16 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
               <label className="text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">Transaction Name</label>
               <div className="relative">
                 <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onBlur={() => setTouched(prev => ({ ...prev, name: true }))}
-                  placeholder="e.g. Grocery Shopping" 
+                  placeholder="e.g. Grocery Shopping"
                   className={cn(
                     "w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 dark:bg-zinc-950 border rounded-xl outline-none transition-all text-sm sm:text-base",
-                    touched.name && errors.name 
-                      ? "border-rose-500 focus:border-rose-500" 
+                    touched.name && errors.name
+                      ? "border-rose-500 focus:border-rose-500"
                       : "border-zinc-200 dark:border-zinc-800 focus:border-emerald-500"
                   )}
                   required
@@ -150,17 +150,17 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                 <label className="text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">Amount</label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     step="0.01"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     onBlur={() => setTouched(prev => ({ ...prev, amount: true }))}
-                    placeholder="0.00" 
+                    placeholder="0.00"
                     className={cn(
                       "w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 dark:bg-zinc-950 border rounded-xl outline-none transition-all text-sm sm:text-base",
-                      touched.amount && errors.amount 
-                        ? "border-rose-500 focus:border-rose-500" 
+                      touched.amount && errors.amount
+                        ? "border-rose-500 focus:border-rose-500"
                         : "border-zinc-200 dark:border-zinc-800 focus:border-emerald-500"
                     )}
                     required
@@ -174,15 +174,15 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                 <label className="text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">Date</label>
                 <div className="relative">
                   <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-                  <input 
-                    type="date" 
+                  <input
+                    type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     onBlur={() => setTouched(prev => ({ ...prev, date: true }))}
                     className={cn(
                       "w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 dark:bg-zinc-950 border rounded-xl outline-none transition-all text-sm sm:text-base",
-                      touched.date && errors.date 
-                        ? "border-rose-500 focus:border-rose-500" 
+                      touched.date && errors.date
+                        ? "border-rose-500 focus:border-rose-500"
                         : "border-zinc-200 dark:border-zinc-800 focus:border-emerald-500"
                     )}
                     required
@@ -196,7 +196,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
 
             <div className="space-y-1.5 sm:space-y-2">
               <label className="text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">Category</label>
-              <select 
+              <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 className="w-full px-4 py-2.5 sm:py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:border-emerald-500 outline-none transition-all appearance-none text-sm sm:text-base"
@@ -225,7 +225,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                   <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Frequency</label>
-                      <select 
+                      <select
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value as Frequency)}
                         className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:border-emerald-500 outline-none transition-all appearance-none"
@@ -244,7 +244,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                         <div className="space-y-2">
                           <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Custom Rule Type</label>
                           <div className="grid grid-cols-2 gap-2">
-                            <button 
+                            <button
                               type="button"
                               onClick={() => setMetadata({ dayOfWeek: 1 })}
                               className={cn(
@@ -256,7 +256,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                             >
                               Specific Day
                             </button>
-                            <button 
+                            <button
                               type="button"
                               onClick={() => setMetadata({ dayOfWeek: 1, weekOfMonth: 1 })}
                               className={cn(
@@ -274,7 +274,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                         {metadata.dayOfWeek !== undefined && metadata.weekOfMonth === undefined && (
                           <div className="space-y-2">
                             <label className="text-xs font-bold text-zinc-500">Every</label>
-                            <select 
+                            <select
                               value={metadata.dayOfWeek}
                               onChange={(e) => setMetadata({ dayOfWeek: parseInt(e.target.value) })}
                               className="w-full px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm outline-none"
@@ -290,7 +290,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                           <div className="grid grid-cols-2 gap-2">
                             <div className="space-y-2">
                               <label className="text-xs font-bold text-zinc-500">The</label>
-                              <select 
+                              <select
                                 value={metadata.weekOfMonth}
                                 onChange={(e) => setMetadata({ ...metadata, weekOfMonth: parseInt(e.target.value) })}
                                 className="w-full px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm outline-none"
@@ -302,7 +302,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                             </div>
                             <div className="space-y-2">
                               <label className="text-xs font-bold text-zinc-500">Day</label>
-                              <select 
+                              <select
                                 value={metadata.dayOfWeek}
                                 onChange={(e) => setMetadata({ ...metadata, dayOfWeek: parseInt(e.target.value) })}
                                 className="w-full px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm outline-none"
@@ -319,8 +319,8 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
 
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">End Date (Optional)</label>
-                      <input 
-                        type="date" 
+                      <input
+                        type="date"
                         value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}
                         className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:border-emerald-500 outline-none transition-all"
@@ -333,8 +333,8 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
 
             {initialData?.recurringId && (
               <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   id="updateRecurring"
                   checked={updateRecurring}
                   onChange={(e) => setUpdateRecurring(e.target.checked)}
@@ -347,16 +347,16 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
             )}
 
             <div className="pt-2 sm:pt-4 flex gap-3 sticky bottom-0 bg-white dark:bg-zinc-900 py-3 sm:py-4">
-              <button 
+              <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2.5 sm:py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-sm sm:text-base"
+                className="flex-1 py-3 sm:py-4 rounded-[32px] border border-zinc-200 dark:border-zinc-800 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all active:scale-[0.98] text-sm sm:text-base"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 type="submit"
-                className="flex-1 py-2.5 sm:py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20 text-sm sm:text-base"
+                className="flex-1 py-3 sm:py-4 rounded-[32px] bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 active:scale-[0.98] text-sm sm:text-base"
               >
                 {initialData ? 'Update' : 'Save'}
               </button>

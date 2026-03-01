@@ -29,3 +29,11 @@ This document tracks anti-patterns found during architectural audits to ensure t
 **Issue:** Advanced architecture migrations and TS compilations implicitly assume that `node` and `npm` are universally available in the PATH.
 **Consequence:** When the CI/CD or host agent machine lacks these tools, verification (`npm run build`) is completely blocked, leading to false-positive IDE lint warnings regarding "Missing Modules".
 **Solution:** Always verify environment requirements via `Get-Command node` or `npm -v` before planning automated verifications, and document missing tooling explicitly to avoid debugging phantom TS errors that just need a package install.
+## 5. Component Standardization for UI Continuity
+**Issue:** Hardcoding common UI structures (like Card Headers containing an Icon, background color, and specific radius/spacing) across multiple grid components leads to visual fragmentation and duplicated, fragile CSS rules.
+**Consequence:** When design standards change (e.g., AMOELD padding or specific gap adjustments), every individual card must be manually audited and updated, increasing the risk of "1 off" design errors.
+**Solution:** Implement strict unified components (e.g., `CardHeader`) using DRY principles. Define exact token values (12px radius, 24x24 icons) in a single source of truth and inject specific data logic downstream.
+
+## 6. Realistic Component Design vs. Flat UI
+**Insight:** Representing physical objects (like credit cards) with loud, flat gradients breaks immersion in premium applications.
+**Pattern:** To elevate an interface from "software" to "fintech tool", apply deep satin gradients, physical aspect ratios (ID-1 / 1.586:1), subtle noise textures, and realistic branding (chips, contactless tags). Hover states should mimic physical manipulation (e.g., lifting from a wallet) using top edge highlights to catch simulated light.

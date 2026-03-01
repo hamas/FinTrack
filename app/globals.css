@@ -2,6 +2,133 @@
 
 @theme {
   --animate-spin-slow: spin 3s linear infinite;
+
+  /* Compact Scaling: Base 14px (0.875rem) */
+  --font-size-xs: 0.75rem;
+  /* 12px */
+  --font-size-sm: 0.8125rem;
+  /* 13px */
+  --font-size-base: 0.875rem;
+  /* 14px */
+  --font-size-lg: 1rem;
+  /* 16px */
+  --font-size-xl: 1.125rem;
+  /* 18px */
+  --font-size-2xl: 1.25rem;
+  /* 20px */
+  --font-size-3xl: 1.5rem;
+  /* 24px */
+  --font-size-4xl: 1.875rem;
+  /* 30px */
+
+  /* Proportional Spacing Reduction (Tighter Layout) */
+  /* Reduced from default 0.25rem to 0.2rem (~20% reduction) */
+  --spacing: 0.2rem;
+
+  /* Typography Overhaul - Google Sans Flex */
+  --font-sans: "Google Sans Flex", system-ui, sans-serif;
+}
+
+/* Base Light Mode Variables */
+:root {
+  --color-bg-base: #F8F9FA;
+  --color-bg-card: #FFFFFF;
+  --color-text-primary: #202124;
+
+  --elevation-shadow: 0 10px 40px -10px rgb(0 0 0 / 0.08);
+  /* Soft diffuse large shadow */
+  --elevation-border: transparent;
+
+  /* Vibrant Accents */
+  --color-success: #00E676;
+  --color-warning: #FFD600;
+  --color-error: #FF5252;
+}
+
+/* Base Dark Mode Variables (AMOLED Optimized) */
+.dark {
+  --color-bg-base: #000000;
+  /* True Black */
+  --color-bg-card: #121212;
+  /* Elevated Card Surface */
+  --color-text-primary: #E8EAED;
+
+  --elevation-shadow: none;
+  --elevation-border: #282828;
 }
 
 @variant dark (&:where(.dark, .dark *));
+
+/* Global Base Adjustments */
+@layer base {
+  html {
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-weight: 400;
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  h2,
+  h3,
+  h4 {
+    font-weight: 600;
+  }
+}
+
+/* Semantic Utility Classes (For 2026 Modular Usage) */
+@layer utilities {
+  .theme-card {
+    background-color: var(--color-bg-card);
+    box-shadow: var(--elevation-shadow);
+    border: 1px solid var(--elevation-border);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Spacious & Modern UI Enforcements */
+    @apply rounded-[32px] p-8;
+  }
+
+  .theme-card-interactive {
+    background-color: var(--color-bg-card);
+    box-shadow: var(--elevation-shadow);
+    border: 1px solid var(--elevation-border);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    @apply rounded-[32px] p-8 hover:scale-[0.98];
+  }
+
+  /* Minimalist Form Inputs (Phase 10 Settings Hub) */
+  .minimalist-input {
+    background-color: var(--color-bg-base);
+    border: 1px solid transparent;
+    border-bottom: 2px solid var(--elevation-border);
+    transition: all 0.2s ease-out;
+
+    @apply rounded-2xl w-full px-4 py-3 outline-none font-medium;
+  }
+
+  .dark .minimalist-input {
+    background-color: #1A1D23;
+  }
+
+  .minimalist-input:focus {
+    border-bottom-color: var(--color-success);
+    background-color: var(--color-bg-card);
+  }
+}

@@ -3,12 +3,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   serverExternalPackages: ['better-sqlite3'],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: false,
   },
+  turbopack: {},
   // Allow access to remote image placeholder.
   images: {
     remotePatterns: [

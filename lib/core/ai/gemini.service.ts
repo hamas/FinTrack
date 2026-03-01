@@ -40,18 +40,22 @@ class GeminiService {
             const ai = this.ai;
             if (!ai) throw new Error('AI client instance is missing.');
 
-            const model = ai.getGenerativeModel({ model: this.MODEL_ID });
-            const response = await model.generateContent({
+            // Using the v1.43.0 approach: call generateContent directly from the models module
+            // as discovered in the SDK's genai.d.ts (line 7469)
+            const response = await (ai as any).models.generateContent({
+                model: this.MODEL_ID,
                 contents: [
                     {
                         role: 'user',
                         parts: [{ text: sanitizedPrompt }]
                     }
                 ],
-                systemInstruction: systemInstruction,
+                config: {
+                    systemInstruction: systemInstruction,
+                }
             });
 
-            return response.response.text() || null;
+            return response.text || null;
         } catch (error) {
             console.error('[GeminiService] Failed to generate insight:', error);
             throw error;

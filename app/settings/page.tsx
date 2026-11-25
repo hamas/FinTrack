@@ -9,6 +9,11 @@ import { useUserProfile } from '@/lib/presentation/context/user-profile-context'
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
+/**
+ * The Settings Configuration Page.
+ * Allows users to manage their personal profile, authentication methods, 
+ * UI preferences (like dark mode and font scaling), and linked financial institutions.
+ */
 export default function SettingsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();

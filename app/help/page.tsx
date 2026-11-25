@@ -5,6 +5,10 @@ import { Sidebar } from '@/lib/presentation/components/sidebar';
 import { Header } from '@/lib/presentation/components/header';
 import { HelpCircle, MessageSquare, Book, FileText, ExternalLink } from 'lucide-react';
 
+/**
+ * The Help and Support Page.
+ * Provides a static knowledge base, FAQs, and contact options for user assistance.
+ */
 export default function HelpPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 

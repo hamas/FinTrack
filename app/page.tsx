@@ -33,6 +33,12 @@ import { useDashboard } from '@/lib/presentation/hooks/use-dashboard';
 import { CardHeader } from '@/lib/presentation/components/card-header';
 import { CardStack } from '@/lib/presentation/components/card-stack';
 
+/**
+ * The main application Dashboard page.
+ * Acts as the central hub, aggregating data from the `useDashboard` hook
+ * and distributing it to various specialized UI components (charts, lists, modals).
+ * Heavily utilizes Framer Motion for entrance animations.
+ */
 export default function DashboardPage() {
   const { state, actions } = useDashboard();
   const {
@@ -51,7 +57,10 @@ export default function DashboardPage() {
     savingsRate
   } = state;
 
-  // Framer Motion Variants for Staggered Load
+  /**
+   * Framer Motion timing variables for the parent container.
+   * Staggers the entrance of child elements to create a cascading load effect.
+   */
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -69,10 +78,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    // Fixed viewport container to manage sidebar and main content scrolling independently
+    <div className="flex h-screen overflow-hidden">
       <Sidebar isOpen={isSidebarOpen} onClose={() => actions.setIsSidebarOpen(false)} />
 
-      <main className="flex-1 flex flex-col overflow-x-hidden">
+      <main className="flex-1 h-full overflow-y-auto overflow-x-hidden">
         <Header
           onMenuClick={() => actions.setIsSidebarOpen(true)}
           onSearch={actions.setSearchTerm}
@@ -84,7 +94,6 @@ export default function DashboardPage() {
           initial="hidden"
           animate="show"
         >
-          {/* Welcome Section */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Welcome back, Alex!</h1>
@@ -108,7 +117,6 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* ... Modal Components ... */}
           <AddTransactionModal
             isOpen={isModalOpen}
             onClose={actions.handleModalClose}
@@ -131,7 +139,7 @@ export default function DashboardPage() {
             categories={categories}
           />
 
-          {/* Macro Hero Layout - Single Focal Anchor */}
+          {/* Core Balance Display: Features a massive, responsive typography layout and a decorative background icon */}
           <motion.div variants={itemVariants} className="theme-card relative overflow-hidden group border-0 shadow-2xl shadow-zinc-200/50 dark:shadow-none ring-1 ring-zinc-200 dark:ring-[#282828]">
             <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-10 pointer-events-none">
               <Wallet className="w-64 h-64 -mt-16 -mr-16 text-zinc-900 dark:text-white transform rotate-12 group-hover:rotate-6 transition-transform duration-700 ease-out" />
@@ -157,7 +165,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Nested Modular Metrics */}
               <div className="flex bg-zinc-50 dark:bg-[#0A0A0A] rounded-[24px] p-6 gap-8 border border-zinc-200/50 dark:border-[#282828]">
                 <div>
                   <p className="text-xs font-bold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider mb-2">Income Flow</p>
@@ -176,10 +183,9 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* Masonry Content Grid */}
+          {/* Primary Dashboard Grid: 12-column layout (8 columns for charts/lists, 4 for secondary panels) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 
-            {/* Primary Column - Data Viz (Spans 8 cols) */}
             <div className="lg:col-span-8 space-y-6 sm:space-y-8 flex flex-col">
 
               <motion.div variants={itemVariants} className="theme-card flex-1 min-h-[400px]">
@@ -234,10 +240,8 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Secondary Column - Ancillary Tools (Spans 4 cols) */}
             <div className="lg:col-span-4 space-y-6 sm:space-y-8 flex flex-col">
 
-              {/* Budget Hardware Progress Tracks */}
               <motion.div variants={itemVariants} className="theme-card">
                 <CardHeader
                   title="Hardware Allocation"
@@ -255,12 +259,10 @@ export default function DashboardPage() {
                 <BudgetProgress categories={categories} transactions={transactions} />
               </motion.div>
 
-              {/* Interactive Layered Card Stack */}
               <motion.div variants={itemVariants} className="w-full relative z-10">
                 <CardStack />
               </motion.div>
 
-              {/* Quick Action Dock */}
               <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
                 <button className="theme-card-interactive flex flex-col items-center justify-center gap-3 !p-6">
                   <div className="p-3.5 rounded-2xl bg-zinc-100 dark:bg-[#1E1E1E] text-zinc-700 dark:text-zinc-300 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">

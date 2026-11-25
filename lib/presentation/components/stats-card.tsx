@@ -5,6 +5,10 @@ import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
+/**
+ * Configuration props for a specific metric's StatsCard.
+ * @interface StatsCardProps
+ */
 interface StatsCardProps {
   title: string;
   value: string;
@@ -14,6 +18,12 @@ interface StatsCardProps {
   color?: 'emerald' | 'rose' | 'blue' | 'amber';
 }
 
+/**
+ * A small dashboard widget displaying a single key performance indicator (KPI),
+ * such as Total Balance or Monthly Income, along with its recent trend.
+ * 
+ * @param {StatsCardProps} props - Properties guiding the visual and data output
+ */
 export function StatsCard({ title, value, change, icon: Icon, trend, color = 'emerald' }: StatsCardProps) {
   const colorClasses = {
     emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30",

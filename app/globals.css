@@ -1,3 +1,13 @@
+/* 
+ * ----------------------------------------------------------------------------
+ * FinTrack Global Stylesheet
+ * ----------------------------------------------------------------------------
+ * This file defines the foundational CSS architecture for the entire application.
+ * It utilizes Tailwind CSS v4 directives and establishes custom CSS variables
+ * for theming (Light/Dark mode), typography scaling, and semantic utility classes
+ * (e.g., .theme-card) to ensure UI consistency across all components.
+ * ----------------------------------------------------------------------------
+ */
 @import "tailwindcss";
 
 @theme {

@@ -8,6 +8,11 @@ import { Plus, Settings2, TrendingUp } from 'lucide-react';
 
 import { Category, Transaction } from '@/lib/domain/entities/types';
 
+/**
+ * The Budgets Management Page.
+ * Displays a grid of user-defined budgets and their current progress based on transaction history.
+ * Highlights budgets nearing their predefined limits.
+ */
 export default function BudgetsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -34,6 +39,7 @@ export default function BudgetsPage() {
     fetchData();
   }, []);
 
+  // Maps category budgets against actual spent amounts within those categories
   const budgets = categories
     .filter(c => c.type === 'expense' && c.budget)
     .map(c => {

@@ -10,14 +10,24 @@ import { motion } from 'framer-motion';
 
 import { formatCurrency } from '@/lib/format';
 
+/**
+ * Configuration and lifecycle hooks for the TransactionList.
+ * @interface TransactionListProps
+ */
 interface TransactionListProps {
   transactions?: Transaction[];
   onEdit?: (transaction: Transaction) => void;
   searchTerm?: string;
   onSearchChange?: (term: string) => void;
-  showSearch?: boolean;
+  showSearch?: boolean; // Toggles the inline dynamic search input
 }
 
+/**
+ * Renders a scrollable list of historical financial transactions.
+ * Includes inline search filtering, empty state handling, and click-to-edit interactions.
+ * 
+ * @param {TransactionListProps} props - Component properties
+ */
 export function TransactionList({
   transactions = [],
   onEdit,

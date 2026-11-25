@@ -7,11 +7,21 @@ import { cn } from '@/lib/utils';
 import { ICON_MAP } from '@/lib/icons';
 import { Tag } from 'lucide-react';
 
+/**
+ * Props mapping for the BudgetProgress visualization component.
+ * @interface BudgetProgressProps
+ */
 interface BudgetProgressProps {
   categories: Category[];
   transactions: Transaction[];
 }
 
+/**
+ * Visualizes spending against defined category budgets.
+ * Renders a list of progress bars with color-coded tracking (turning red if over budget).
+ * 
+ * @param {BudgetProgressProps} props Component data sources
+ */
 export function BudgetProgress({ categories, transactions }: BudgetProgressProps) {
   const budgetCategories = categories.filter(c => c.budget && c.budget > 0);
 
@@ -39,6 +49,7 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
           <div key={category.id} className="space-y-2 group">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
+                {/* Category Icon Badge with hover-scaling animation */}
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-black/20"
                   style={{ backgroundColor: `${category.color}15`, color: category.color }}
                 >
@@ -64,8 +75,9 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
               </div>
             </div>
 
-            {/* 12px Hardware Glass Track */}
+            {/* 12px Hardware Glass Track: Represents the total budget line */}
             <div className="h-3 w-full bg-zinc-100 dark:bg-white/5 backdrop-blur-md rounded-full overflow-hidden border border-zinc-200/50 dark:border-white/10 shadow-inner">
+              {/* Fill indicator: Grows horizontally based on percentage, changes to rose-500 if exceeded */}
               <div
                 className={cn(
                   "h-full transition-all duration-700 ease-out rounded-full relative",
@@ -77,7 +89,7 @@ export function BudgetProgress({ categories, transactions }: BudgetProgressProps
                   boxShadow: isOverBudget ? '0 0 15px rgba(244, 63, 94, 0.4)' : `0 0 15px ${category.color}60`
                 }}
               >
-                {/* Simulated LED Glint */}
+                {/* Simulated LED Glint: Adds a shiny reflection to the leading edge of the progress bar */}
                 <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-r from-transparent to-white/30 rounded-r-full"></div>
               </div>
             </div>

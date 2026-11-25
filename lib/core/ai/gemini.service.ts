@@ -3,17 +3,28 @@ import { env } from '../config/env.config';
 import { sanitizeForAI } from './sanitization.util';
 
 /**
- * Singleton service handling the connection to Google Gemini models.
- * Used for financial data reasoning, automated categorization, and budgeting advice.
+ * Singleton service for interacting with Google's Gemini LLM.
+ * 
+ * Used for processing financial data, generating budgeting advice,
+ * and performing automated classification on user transactions.
+ * 
+ * @module core/ai/gemini
  */
 class GeminiService {
+    /** The active SDK instance for internal usage */
     private ai: GoogleGenAI | null = null;
+    /** The target foundation model used for all project reasoning */
     public readonly MODEL_ID = 'gemini-2.5-flash';
 
     constructor() {
         this.init();
     }
 
+    /**
+     * Initializes the connection to the Google Generative AI APIs.
+     * Silently disables functionality if the API key is not present in the environment limits.
+     * @private
+     */
     private init() {
         if (env.GOOGLE_GENAI_API_KEY) {
             this.ai = new GoogleGenAI({ apiKey: env.GOOGLE_GENAI_API_KEY });
@@ -23,8 +34,13 @@ class GeminiService {
     }
 
     /**
-     * Generates insight or categorization based on transaction history and prompt.
-     * Prompts the chosen 2.5 Flash model for fast, structured reasoning.
+     * Sends a prompt and associated financial context to Gemini for evaluation.
+     * Before transmittal, the context and prompt natively pass through the `sanitizeForAI` scrubber.
+     * 
+     * @param {string} prompt - The direct question or command from the user.
+     * @param {Record<string, unknown> | unknown[]} context - The relevant financial data array or object.
+     * @returns {Promise<string | null>} The text response from the LLM, or null if empty.
+     * @throws {Error} Throws if the API key is missing or the external network call outright fails.
      */
     async generateFinancialInsight(prompt: string, context: Record<string, unknown> | unknown[]): Promise<string | null> {
         if (!this.ai) {
@@ -40,8 +56,6 @@ class GeminiService {
             const ai = this.ai;
             if (!ai) throw new Error('AI client instance is missing.');
 
-            // Using the v1.43.0 approach: call generateContent directly from the models module
-            // as discovered in the SDK's genai.d.ts (line 7469)
             const response = await (ai as any).models.generateContent({
                 model: this.MODEL_ID,
                 contents: [

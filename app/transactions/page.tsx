@@ -11,6 +11,11 @@ import { Download, Filter, Plus, Search, Calendar, Tag, ChevronRight } from 'luc
 import { subDays, isWithinInterval, startOfYear, subMonths } from 'date-fns';
 import { motion } from 'motion/react';
 
+/**
+ * The Master Transactions Ledger Page.
+ * A comprehensive view of all financial activities, supporting advanced filtering 
+ * by date range, category, and text search. Includes capabilities to edit or export data.
+ */
 export default function TransactionsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -26,7 +31,6 @@ export default function TransactionsPage() {
   const filteredTransactions = React.useMemo(() => {
     let filtered = [...transactions];
 
-    // Search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(tx => 
@@ -36,12 +40,10 @@ export default function TransactionsPage() {
       );
     }
 
-    // Category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(tx => tx.categoryId === selectedCategory);
     }
 
-    // Date range filter
     if (dateRange !== 'all') {
       const now = new Date();
       let start: Date;

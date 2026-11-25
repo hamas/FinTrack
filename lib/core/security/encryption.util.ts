@@ -1,3 +1,12 @@
+/**
+ * AES-256-GCM Encryption Utilities
+ * 
+ * Provides robust symmetrical encryption and decryption functionality
+ * for securing sensitive data at rest in the SQLite database.
+ * 
+ * @module core/security/encryption
+ */
+
 import crypto from 'crypto';
 import { env } from '../config/env.config';
 
@@ -8,7 +17,10 @@ const TAG_LENGTH = 16;
 const KEY_LENGTH = 32;
 
 /**
- * Derives a consistent encryption key from the environment secret
+ * Derives a consistent, 32-byte encryption key asynchronously from the 
+ * environment secret using the robust scrypt key derivation function.
+ * 
+ * @returns {Buffer} A 32-byte (256-bit) buffer safe for AES-256-GCM encryption.
  */
 const getKey = (): Buffer => {
     return crypto.scryptSync(env.ENCRYPTION_KEY || 'default_dev_key_must_change', 'salt', KEY_LENGTH);
@@ -16,12 +28,15 @@ const getKey = (): Buffer => {
 
 /**
  * Encrypts a sensitive string using AES-256-GCM.
- * @param text The plain text to encrypt
- * @returns Base64 encoded encrypted string format: iv:tag:encryptedText
+ * Automatically generates a secure random Initialization Vector (IV) and Authentication Tag.
+ * 
+ * @param {string} text - The plain text to encrypt.
+ * @returns {string} Base64 encoded cyphertext format: `iv:tag:encryptedText`.
  */
 export const encrypt = (text: string): string => {
     if (!text) return text;
 
+    // Generate a unique IV for every encryption payload to prevent pattern analysis
     const iv = crypto.randomBytes(IV_LENGTH);
     const cipher = crypto.createCipheriv(ALGORITHM, getKey(), iv);
 
@@ -33,11 +48,14 @@ export const encrypt = (text: string): string => {
 };
 
 /**
- * Decrypts an AES-256-GCM encrypted string.
- * @param encryptedText The encrypted string format: iv:tag:encryptedText
- * @returns The original plain text
+ * Decrypts an AES-256-GCM encrypted string back to plaintext.
+ * Validates the Authentication Tag to ensure the cyphertext has not been tampered with.
+ * 
+ * @param {string} encryptedText - The formatted encrypted string: `iv:tag:encryptedText`.
+ * @returns {string} The original plain text, or a failure warning if decryption fails.
  */
 export const decrypt = (encryptedText: string): string => {
+    // Return early if the text doesn't conform to the expected format
     if (!encryptedText || !encryptedText.includes(':')) return encryptedText;
 
     try {

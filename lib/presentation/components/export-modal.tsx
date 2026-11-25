@@ -6,6 +6,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Category, Transaction } from '@/lib/domain/entities/types';
 import { format, isWithinInterval, parseISO } from 'date-fns';
 
+/**
+ * Props for the ExportModal component.
+ * @interface ExportModalProps
+ */
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +17,12 @@ interface ExportModalProps {
   categories: Category[];
 }
 
+/**
+ * A modal dialog allowing users to export their financial data as a CSV file.
+ * Supports filtering by date range and category before generating the download.
+ * 
+ * @param {ExportModalProps} props - Component properties
+ */
 export function ExportModal({ isOpen, onClose, transactions, categories }: ExportModalProps) {
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');

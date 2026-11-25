@@ -6,6 +6,7 @@ import { CreditCard, Plus, Wifi } from 'lucide-react';
 import { formatCurrency } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
+/** Defines the properties of a mocked or saved user credit/debit card */
 export interface SavedCard {
     id: string;
     brand: 'visa' | 'mastercard';
@@ -70,11 +71,18 @@ const gradientMap = {
     emerald: 'from-[#0D2818] to-[#05140B]'
 };
 
+/**
+ * An interactive, 3D overlapping stack of credit cards.
+ * Uses Framer Motion for physics-based spring animations when reordering the stack.
+ */
 export function CardStack() {
     const [cards, setCards] = React.useState<SavedCard[]>(MOCK_CARDS);
     const [isHovered, setIsHovered] = React.useState(false);
 
-    // Moves the clicked card to the front of the array (index 0)
+    /**
+     * Reorders the state array to bring the clicked card to index 0 (the top).
+     * @param {string} id - The Unique ID of the card to elevate.
+     */
     const bringToFront = (id: string) => {
         setCards((currentCards) => {
             const cardIndex = currentCards.findIndex((c) => c.id === id);
@@ -88,6 +96,7 @@ export function CardStack() {
     };
 
     return (
+        // Container applying 3D perspective to make the vertical stacking feel physical
         <div
             className="relative w-full h-[320px] sm:h-[400px] perspective-1000"
             onMouseEnter={() => setIsHovered(true)}
@@ -95,12 +104,10 @@ export function CardStack() {
         >
             <div className="absolute inset-x-0 bottom-0 top-12 max-w-sm mx-auto">
                 <AnimatePresence>
-                    {/* Render cards in reverse so array[0] is visibly on top in the DOM stacking context */}
                     {[...cards].reverse().map((card, reversedIndex) => {
                         const index = cards.length - 1 - reversedIndex;
 
-                        // Physical displacement physics
-                        // Stack offset is 48px to show headers. Expansion on hover slides it down to 80px gaps.
+                        // Calculate physical offset based on position in stack and hover state
                         const yOffset = isHovered ? index * 80 : index * 48;
                         const scaleOffset = 1 - (index * 0.05);
                         const zIndexOffset = cards.length - index;
@@ -133,13 +140,12 @@ export function CardStack() {
                                     transformOrigin: 'top center'
                                 }}
                             >
-                                {/* 3% Brushed Metal Noise Texture */}
+                                {/* Generative SVG Noise Texture overlay for a realistic plastic material feel */}
                                 <div
                                     className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none"
                                     style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }}
                                 />
 
-                                {/* ID-1 Hard Top Edge Highlight to catch physical wallet lighting */}
                                 <div className="absolute inset-x-0 top-0 h-px bg-white/10 pointer-events-none z-20"></div>
 
                                 <div className="flex flex-col h-full relative z-10 justify-between">
@@ -193,7 +199,6 @@ export function CardStack() {
                                                 </div>
                                             </div>
 
-                                            {/* Brand Logos */}
                                             <div className="flex items-center shrink-0 ml-4 opacity-90 drop-shadow-xl">
                                                 {card.brand === 'mastercard' ? (
                                                     <MastercardLogo className="w-12 h-auto" />
@@ -205,14 +210,13 @@ export function CardStack() {
                                     </div>
                                 </div>
 
-                                {/* Subtle base lighting overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent mix-blend-overlay pointer-events-none"></div>
                             </motion.div>
                         );
                     })}
 
-                    {/* Dashed 'Add Card' Background Action */}
                     <motion.div
+                        // The underlying "Add New Card" placeholder slot
                         initial={false}
                         animate={{
                             top: isHovered ? cards.length * 80 + 10 : cards.length * 48 + 10,

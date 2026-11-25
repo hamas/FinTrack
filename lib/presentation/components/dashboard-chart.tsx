@@ -17,10 +17,18 @@ import { Transaction } from '@/lib/domain/entities/types';
 import { formatCurrency } from '@/lib/format';
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 
+/**
+ * Props for the Dashboard Chart component.
+ * @interface DashboardChartProps
+ */
 interface DashboardChartProps {
   transactions: Transaction[];
 }
 
+/**
+ * Custom tooltip renderer for the Recharts AreaChart.
+ * Overrides the default styles to match the application's glassmorphism theme.
+ */
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -42,7 +50,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+/**
+ * A responsive area chart visualizing income vs. expenses over the last 6 months.
+ * Uses Recharts for SVG rendering and date-fns for time series bucketing.
+ * 
+ * @param {DashboardChartProps} props - Data source holding all transactions
+ */
 export function DashboardChart({ transactions }: DashboardChartProps) {
+  // Prevent hydration mismatch by only rendering chart data on the client
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -80,14 +95,17 @@ export function DashboardChart({ transactions }: DashboardChartProps) {
   }, [transactions]);
 
   return (
+    // Fixed height container required by Recharts ResponsiveContainer
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
+            {/* Emerald fade gradient for Income line */}
             <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
               <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
             </linearGradient>
+            {/* Rose fade gradient for Expense line */}
             <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
               <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />

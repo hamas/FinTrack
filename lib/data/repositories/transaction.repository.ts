@@ -4,11 +4,19 @@ import { getNextOccurrence } from '../../date-utils';
 import { encrypt, decrypt } from '../../core/security/encryption.util';
 
 /**
- * Handles database operations for Financial Transactions.
+ * Repository for orchestrating database operations on Financial Transactions.
+ * 
+ * Implements the Repository pattern to isolate the SQLite layer from the 
+ * rest of the application. Also handles auto-encryption/decryption of sensitive PII.
+ * 
+ * @module data/repositories/transaction
  */
 export class TransactionRepository {
     /**
-     * Retrieves all transactions merged with their respective category details.
+     * Retrieves all user transactions, automatically joining them with their 
+     * respective category details for UI rendering context.
+     * 
+     * @returns {Promise<Transaction[]>} Array of joined and decrypted transactions.
      */
     async getAll(): Promise<Transaction[]> {
         const rows = db.prepare(`
@@ -18,7 +26,8 @@ export class TransactionRepository {
       ORDER BY t.date DESC
     `).all() as any[];
 
-        // Decrypt names before returning to client (Example of the AES implementation)
+        // Transparent decryption of the PII 'name' field before the data 
+        // ever reaches the Domain or Presentation layers.
         return rows.map((row) => ({
             ...row,
             name: decrypt(row.name),
@@ -26,7 +35,12 @@ export class TransactionRepository {
     }
 
     /**
-     * Inserts a new transaction. Generates recurring transactions automatically if enabled.
+     * Inserts a new transaction into the database.
+     * Automatically orchestrates the creation of a paired `recurring_transaction` rule
+     * if the incoming payload flags it as recurring.
+     * 
+     * @param {any} payload - The transaction data payload from the API/UI.
+     * @returns {Promise<void>}
      */
     async create(payload: any): Promise<void> {
         const { id, name, amount, date, categoryId, isRecurring, frequency, endDate, metadata } = payload;
@@ -50,7 +64,12 @@ export class TransactionRepository {
     }
 
     /**
-     * Updates an existing transaction by id.
+     * Updates an existing transaction's properties.
+     * Optionally propagates the changes up to the parent recurring rule if requested.
+     * 
+     * @param {string} id - The Unique ID of the transaction to modify.
+     * @param {any} updates - The partial transaction object containing changes.
+     * @returns {Promise<void>}
      */
     async update(id: string, updates: any): Promise<void> {
         const { name, amount, date, categoryId, updateRecurring } = updates;
@@ -69,7 +88,10 @@ export class TransactionRepository {
     }
 
     /**
-     * Deletes a transaction by id.
+     * Permanently deletes a single transaction record from the database.
+     * 
+     * @param {string} id - The Unique ID of the target transaction.
+     * @returns {Promise<void>}
      */
     async delete(id: string): Promise<void> {
         db.prepare('DELETE FROM transactions WHERE id = ?').run(id);

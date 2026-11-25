@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { categoryRepository } from '@/lib/data/repositories/category.repository';
 
+/**
+ * GET handler to retrieve all financial categories.
+ * 
+ * @returns {Promise<NextResponse>} JSON array of Category objects or 500 on error.
+ */
 export async function GET() {
   try {
     const categories = await categoryRepository.getAll();
@@ -10,6 +15,12 @@ export async function GET() {
   }
 }
 
+/**
+ * POST handler to create a new financial category.
+ * 
+ * @param {Request} request - The incoming HTTP request containing the Category payload.
+ * @returns {Promise<NextResponse>} JSON success status or 500 on error.
+ */
 export async function POST(request: Request) {
   try {
     const body = await request.json();

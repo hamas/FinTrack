@@ -1,10 +1,21 @@
+/**
+ * Local SQLite database connection initialization.
+ * 
+ * Configures the primary connection to the local database file and 
+ * ensures the foundational schema (Categories, Transactions, Recurring) is built.
+ * 
+ * @module data/data-sources/sqlite
+ */
+
 import Database from 'better-sqlite3';
 import path from 'path';
 
-const dbPath = path.resolve(process.cwd(), 'fintrack.db');
+// Resolve the database against the project root for consistent access
+const dbPath = path.resolve(process.cwd(), 'data/fintrack.db');
 const db = new Database(dbPath);
 
-// Initialize tables
+// Execute foundational schema setup synchronously on startup
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS categories (
     id TEXT PRIMARY KEY,
@@ -40,7 +51,7 @@ db.exec(`
   );
 `);
 
-// Insert initial categories if empty
+// Seed the database with default categories if it is completely empty
 const count = db.prepare('SELECT COUNT(*) as count FROM categories').get() as { count: number };
 if (count.count === 0) {
   const insert = db.prepare('INSERT INTO categories (id, name, iconName, color, type, budget) VALUES (?, ?, ?, ?, ?, ?)');

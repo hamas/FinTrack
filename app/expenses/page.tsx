@@ -9,6 +9,11 @@ import { ExportModal } from '@/lib/presentation/components/export-modal';
 import { Category, Transaction } from '@/lib/domain/entities/types';
 import { Download, Plus, TrendingUp, ArrowDownLeft } from 'lucide-react';
 
+/**
+ * The view dedicated to managing and analyzing Expenses.
+ * Provides a filtered table for outbound transactions, alongside
+ * metrics specific to expense trends (Total Expenses, Average Monthly, Top Category).
+ */
 export default function ExpensesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -18,6 +23,7 @@ export default function ExpensesPage() {
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
 
+  /** Memoized filtered list of expenses based on user search input */
   const filteredTransactions = React.useMemo(() => {
     if (!searchTerm) return transactions;
     const term = searchTerm.toLowerCase();

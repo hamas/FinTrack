@@ -6,6 +6,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Category } from '@/lib/domain/entities/types';
 import { ICON_MAP, ICON_NAMES } from '@/lib/icons';
 
+/** 
+ * Properties for controlling the CategoryManager modal overlay 
+ * @interface CategoryManagerProps
+ */
 interface CategoryManagerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,6 +23,10 @@ const COLORS = [
   '#10b981', '#3b82f6', '#f43f5e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#71717a'
 ];
 
+/**
+ * A modal interface for creating, editing, and deleting financial categories.
+ * Includes a custom visual icon picker and color selection.
+ */
 export function CategoryManager({ isOpen, onClose, categories, onAddCategory, onUpdateCategory, onDeleteCategory }: CategoryManagerProps) {
   const [newName, setNewName] = React.useState('');
   const [newBudget, setNewBudget] = React.useState('');
@@ -59,6 +67,7 @@ export function CategoryManager({ isOpen, onClose, categories, onAddCategory, on
     setNewIcon(ICON_NAMES[0]);
   };
 
+  /** Pre-populates the form state with an existing category's data for editing */
   const startEdit = (cat: Category) => {
     setEditingId(cat.id);
     setNewName(cat.name);
@@ -73,6 +82,7 @@ export function CategoryManager({ isOpen, onClose, categories, onAddCategory, on
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {/* Full-screen backdrop blur clicking wrapper */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -80,6 +90,7 @@ export function CategoryManager({ isOpen, onClose, categories, onAddCategory, on
           onClick={onClose}
           className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         />
+        {/* Modal Container */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -119,6 +130,7 @@ export function CategoryManager({ isOpen, onClose, categories, onAddCategory, on
                       <ChevronDown className="h-3 w-3 text-zinc-400" />
                     </button>
                     
+                    {/* Custom Popover Icon Grid */}
                     {isIconPickerOpen && (
                       <div className="absolute right-0 top-full mt-2 p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-20 grid grid-cols-4 sm:grid-cols-5 gap-1 w-40 sm:w-48">
                         {ICON_NAMES.map(name => {

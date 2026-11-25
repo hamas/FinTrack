@@ -10,6 +10,11 @@ import { PieChart, TrendingUp, ArrowUpRight, ArrowDownLeft } from 'lucide-react'
 import { Category, Transaction } from '@/lib/domain/entities/types';
 import { motion } from 'motion/react';
 
+/**
+ * The Analytics Dashboard Page.
+ * Fetches transaction and category data to provide a deep dive into user spending habits.
+ * Renders aggregate charts (Income vs Expense line chart, Expense Breakdown pie chart).
+ */
 export default function AnalyticsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -38,6 +43,7 @@ export default function AnalyticsPage() {
     fetchData();
   }, []);
 
+  // Calculate high-level financial health indicators for the top statistic cards
   const totalExpenses = transactions
     .filter(t => t.amount < 0)
     .reduce((acc, curr) => acc + Math.abs(curr.amount), 0);

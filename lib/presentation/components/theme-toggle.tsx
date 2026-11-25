@@ -3,8 +3,9 @@
 import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { cn } from '@/lib/utils';
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -27,7 +28,12 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all active:scale-95"
+      className={cn(
+        "flex items-center justify-center rounded-full transition-all active:scale-95",
+        "bg-zinc-100 dark:bg-[#121212] hover:bg-zinc-200 dark:hover:bg-[#1A1A1A]",
+        "border border-zinc-200 dark:border-white/10",
+        className
+      )}
       aria-label="Toggle theme"
     >
       {resolvedTheme === 'dark' ? (

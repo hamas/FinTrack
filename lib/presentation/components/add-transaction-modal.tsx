@@ -7,14 +7,24 @@ import { cn } from '@/lib/utils';
 
 import { Category, Transaction, Frequency, RecurringMetadata } from '@/lib/domain/entities/types';
 
+/**
+ * Properties for the Add/Edit Transaction Modal.
+ * @interface AddTransactionModalProps
+ */
 interface AddTransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: Category[];
   onAddTransaction: (transaction: any) => void;
-  initialData?: Transaction | null;
+  initialData?: Transaction | null; // If provided, the modal operates in Edit mode
 }
 
+/**
+ * A comprehensive modal for creating or editing a financial transaction.
+ * Supports standard entry as well as complex recurring rule configurations.
+ * 
+ * @param {AddTransactionModalProps} props - Component properties
+ */
 export function AddTransactionModal({ isOpen, onClose, categories, onAddTransaction, initialData }: AddTransactionModalProps) {
   const [name, setName] = React.useState('');
   const [amount, setAmount] = React.useState('');
@@ -29,6 +39,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
   const [errors, setErrors] = React.useState<{ name?: string; amount?: string; date?: string }>({});
   const [touched, setTouched] = React.useState<{ name?: boolean; amount?: boolean; date?: boolean }>({});
 
+  /** Validates form fields, generating localized error messages */
   const validate = React.useCallback(() => {
     const newErrors: { name?: string; amount?: string; date?: string } = {};
     if (!name) newErrors.name = 'Name is required';
@@ -107,6 +118,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
           onClick={onClose}
           className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         />
+        {/* Main Modal Container: Restricted height with inner scrolling to prevent viewport run-off */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -239,6 +251,7 @@ export function AddTransactionModal({ isOpen, onClose, categories, onAddTransact
                       </select>
                     </div>
 
+                    {/* Advanced Custom Recurring Rule Builder */}
                     {frequency === 'custom' && (
                       <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 space-y-4">
                         <div className="space-y-2">

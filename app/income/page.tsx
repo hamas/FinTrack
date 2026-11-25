@@ -9,6 +9,11 @@ import { ExportModal } from '@/lib/presentation/components/export-modal';
 import { Category, Transaction } from '@/lib/domain/entities/types';
 import { Download, Plus, TrendingUp, ArrowUpRight } from 'lucide-react';
 
+/**
+ * The view dedicated to managing and analyzing Income.
+ * Provides a filtered table for inbound transactions, alongside
+ * metrics specific to revenue trends (Total Income, Average Monthly, Top Source).
+ */
 export default function IncomePage() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
